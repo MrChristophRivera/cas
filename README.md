@@ -1,8 +1,8 @@
 # Customized Attention Spans (CAS) Models
 
-I recently published a new kind of recurrent neural network (RNN) model called a recurrent weighted average (RWA). The method is described here: https://arxiv.org/abs/1703.01253.
+The recurrent weighted average (RWA) model is a new kind of recurrent neural network (RNN) that is based on the attention mechanism. The model is described  in this [manuscript](https://arxiv.org/abs/1703.01253).The RWA model exhibits no bias where information is located along a sequence. Recent information along a sequence is just as important as information at the beginning of the sequence. For some types of problems, this is undesirable. That is why the RWA model needs an *attention span*.
 
-One disadvantage of the RWA model is that is shows no bias toward recent information. All information along a sequence is treated with equal importance. To correct this, a decay term has been introduced. All decay values must be between 0 and 1. When the decay value is 1, all information along a sequence is treated with equal importance. When the decay value is close to 0, only the most recent information is used.
+In this repository, the RWA model is reimplemented as a TensorFlow RNNCell. The RWA model can now be used as easily as any other RNN architecture available in TensorFlow. To introduce an attention span, a decay term has been introduced. All decay values must be between 0 and 1. When the decay value is 1, all information along a sequence is treated with equal importance. When the decay value is close to 0, only the most recent information is used.
 
-Each unit can be given a different decay value. That way, some units can be focused on just new information, while other units can use information present in the deep past. It is my hope that this model will exhibit superior performance on a range of problems in fields like NLP and bioinformatics.
+Each unit can be given a different decay value. That way some units can have very short attention spans while other units can have indefinite attention spans. It is my hope that this model will exhibit superior performance on a range of problems in fields like NLP and bioinformatics.
 
