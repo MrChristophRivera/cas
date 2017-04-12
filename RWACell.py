@@ -2,6 +2,7 @@
 # Author: Jared L. Ostmeyer
 # Date Started: 2017-04-11
 # Purpose: Recurrent weighted cverage cell for tensorflow.
+# License: See LICENSE
 ##########################################################################################
 
 import tensorflow as tf
