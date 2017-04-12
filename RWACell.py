@@ -23,7 +23,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		n = tf.zeros([batch_size, num_units], dtype=dtype)
 		d = tf.zeros([batch_size, num_units], dtype=dtype)
 		h = tf.zeros([batch_size, num_units], dtype=dtype)
-		a_max = tf.fill([batch_size, num_units], -1E38)	# Start off with lowest number possible
+		a_max = tf.fill([batch_size, num_units], -1E25)	# Start off with a tiny number with room for this value to decay
 
 		return (n, d, h, a_max)
 
