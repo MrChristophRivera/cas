@@ -1,4 +1,4 @@
-# Customized Attention Spans (CAS) Models
+# Customized Attention Span (CAS) Models
 
 The recurrent weighted average (RWA) model is a new kind of recurrent neural network (RNN) that is based on the attention mechanism. The model is described  in this [manuscript](https://arxiv.org/abs/1703.01253).The RWA model exhibits no bias where information is located along a sequence. Recent information along a sequence is just as important as information at the beginning of the sequence. For some types of problems, this is undesirable. That is why the RWA model needs an *attention span*.
 
