@@ -3,6 +3,7 @@
 # Author: Jared L. Ostmeyer
 # Date Started: 2016-11-27
 # Purpose: Train recurrent neural network to classify MNIST digits.
+# License: See LICENSE
 ##########################################################################################
 
 ##########################################################################################
@@ -11,7 +12,7 @@
 
 import numpy as np
 import tensorflow as tf
-from RWACell import *
+from RWACell import *	# Modified code to load RWACell
 
 ##########################################################################################
 # Load data
@@ -48,7 +49,7 @@ y = tf.placeholder(tf.float32, [batch_size, num_classes])
 
 # Variables
 #
-cell = RWACell(num_cells, decay=[0.5]*62+[0.5**0.1]*63+[0.5**0.01]*62+[1.0]*63)
+cell = RWACell(num_cells, decay=[0.5]*62+[0.5**0.1]*63+[0.5**0.01]*62+[1.0]*63)	# Modified code to run RWA model
 W_end = tf.Variable(tf.random_normal([num_cells, num_classes], stddev=np.sqrt(1.0/num_cells)))
 b_end = tf.Variable(tf.zeros([num_classes]))
 
