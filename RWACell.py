@@ -44,13 +44,13 @@ class RWACell(tf.contrib.rnn.RNNCell):
 				tf.get_variable('W_a', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
 			)
 		try:
-			with tf.variable_scope(scope, reuse=True):
+			with tf.variable_scope(scope, reuse=True):	# Works only if the variables have already been created
 				W_u, b_u, W_g, b_g, W_a = load_params()
 		except ValueError:
-			with tf.variable_scope(scope):
+			with tf.variable_scope(scope):	# Called when variables are not yet created
 				W_u, b_u, W_g, b_g, W_a = load_params()
 				s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
-				h += activation(tf.expand_dims(s, 0))
+				h += activation(tf.expand_dims(s, 0))	# Initial hidden state
 
 		xh = tf.concat([x, h], 1)
 
