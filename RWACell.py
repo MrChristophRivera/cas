@@ -5,6 +5,8 @@
 # License: See LICENSE
 ##########################################################################################
 
+# THIS IS MY FIRST IMPLEMENTATION OF A RNNCELL. CODE FIXES APPRECIATED.
+
 import tensorflow as tf
 
 class RWACell(tf.contrib.rnn.RNNCell):
