@@ -5,7 +5,7 @@
 # License: See LICENSE
 ##########################################################################################
 
-"""Module implementing RWA cells.
+"""Module implementing RWA cells with customizable attention spans.
 
 This module provides an implementation of a recurrent weighted average (RWA)
 model (https://arxiv.org/abs/1703.01253). The RWACell extends the `RNNCell`
