@@ -19,22 +19,22 @@ import tensorflow as tf
 class RWACell(tf.contrib.rnn.RNNCell):
 	"""Recurrent weighted averge cell (https://arxiv.org/abs/1703.01253)"""
 
-	def __init__(self, num_units, decay=None):
+	def __init__(self, num_units, decay_rate=None):
 		"""Initialize the RWA cell.
 		Args:
 			num_units: int, The number of units in the RWA cell.
-			decay: (optional) if this is `None` there will be no
-				decay. If this is a float it sets the decay
+			decay_rate: (optional) if this is `None` there will be
+				no decay. If this is a float it sets the decay
 				rate for every unit. If this is a list or
 				tensor of shape `[num_units]` it sets the decay
 				rate for each individual unit.
 		"""
 		self.num_units = num_units
 		self.activation = tf.nn.tanh
-		if decay is None:
-			self.decay = 1.0
+		if decay_rate is None:
+			self.decay_rate = 1.0
 		else:
-			self.decay = decay
+			self.decay_rate = decay_rate
 
 	def zero_state(self, batch_size, dtype):
 		num_units = self.num_units
@@ -50,7 +50,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		num_inputs = inputs.get_shape()[1]
 		num_units = self.num_units
 		activation = self.activation
-		decay = self.decay
+		decay_rate = self.decay_rate
 		x = inputs
 		n, d, h, a_max = state
 
@@ -88,9 +88,9 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		a = tf.matmul(xh, W_a)     # The bias term when factored out of the numerator and denominator cancels and is unnecessary
 		z = tf.multiply(u, tf.nn.tanh(g))
 
-		a_decay = a_max+tf.log(decay)
-		n_decay = tf.multiply(n, decay)
-		d_decay = tf.multiply(d, decay)
+		a_decay = a_max+tf.log(decay_rate)
+		n_decay = tf.multiply(n, decay_rate)
+		d_decay = tf.multiply(d, decay_rate)
 
 		a_newmax = tf.maximum(a_decay, a)
 		exp_diff = tf.exp(a_max-a_newmax)
