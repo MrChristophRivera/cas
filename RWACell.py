@@ -27,7 +27,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 				decay rate for every unit. If this is a list or
 				tensor of shape `[num_units]` it sets the decay
 				rate for each individual unit. The decay rate is
-				defined as ln(2.0)/half-life of the memory.
+				defined as `ln(2.0)/hl` where `hl` is the desired
+				half-life of the memory.
 		"""
 		self.num_units = num_units
 		self.activation = tf.nn.tanh
@@ -85,7 +86,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		a = tf.matmul(xh, W_a)     # The bias term when factored out of the numerator and denominator cancels and is unnecessary
 		z = tf.multiply(u, tf.nn.tanh(g))
 
-		a_decay = a_max+decay_rate
+		a_decay = a_max-decay_rate
 		n_decay = tf.multiply(n, tf.exp(-decay_rate))
 		d_decay = tf.multiply(d, tf.exp(-decay_rate))
 
