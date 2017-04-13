@@ -1,15 +1,23 @@
 ##########################################################################################
 # Author: Jared L. Ostmeyer
 # Date Started: 2017-04-11
-# Purpose: Recurrent weighted cverage cell for tensorflow.
+# Purpose: Recurrent weighted average cell for tensorflow.
 # License: See LICENSE
 ##########################################################################################
 
-# THIS IS MY FIRST IMPLEMENTATION OF A RNNCELL. CODE FIXES APPRECIATED.
+"""Module implementing RWA cells.
+
+This module provides an implementation of a recurrent weighted average (RWA)
+model (https://arxiv.org/abs/1703.01253). The RWACell extends the `RNNCell`
+class to create a model that conforms with recurrent neural network framework
+in TensorFlow.
+"""
 
 import tensorflow as tf
 
+
 class RWACell(tf.contrib.rnn.RNNCell):
+	"""Recurrent Weighted Averge Cell (https://arxiv.org/abs/1703.01253)"""
 
 	def __init__(self, num_units, decay=None):
 		self.num_units = num_units
