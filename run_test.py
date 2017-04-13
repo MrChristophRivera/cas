@@ -50,7 +50,7 @@ y = tf.placeholder(tf.float32, [batch_size, num_classes])
 # Variables
 #
 decay = [0.693]*62+[0.0693]*63+[0.00693]*62+[0.0]*63	# Create different decay rates for different units
-cell = RWACell(num_cells, decay=decay)	# Modified code to run RWA model
+cell = RWACell(num_cells, decay_rate=decay)	# Modified code to run RWA model
 W_end = tf.Variable(tf.random_normal([num_cells, num_classes], stddev=np.sqrt(1.0/num_cells)))
 b_end = tf.Variable(tf.zeros([num_classes]))
 

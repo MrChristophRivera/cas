@@ -32,6 +32,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		"""
 		self.num_units = num_units
 		self.activation = tf.nn.tanh
+		if type(decay_rate) is list:	# Need a better way to check if this is a Tensor
+			decay_rate = tf.constant(decay_rate)
 		self.decay_rate = decay_rate
 
 	def zero_state(self, batch_size, dtype):
