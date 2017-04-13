@@ -62,6 +62,16 @@ class RWACell(tf.contrib.rnn.RNNCell):
 				tf.get_variable('b_g', [num_units], initializer=tf.constant_initializer(0.0)),
 				tf.get_variable('W_a', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
 			)
+		"""The initial state of the RWA are parameters that must be
+		fitted to the data. Because the scope is not defined in
+		`zero_state`, the parameters for the initial state must be
+		created here. A check is needed to determine if the initial
+		state has already been created and used. Unfortunately,
+		TensorFlow lacks a function to check if a variable has already
+		been defined in scope. That is why the exception is used here.
+		If the variables do not exist yet, the variables along with the
+		initial state are created after the exception is thrown.
+		"""
 		try:
 			with tf.variable_scope(scope, reuse=True):	# Works only if the variables have already been created
 				W_u, b_u, W_g, b_g, W_a = load_params()
