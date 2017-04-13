@@ -17,7 +17,7 @@ import tensorflow as tf
 
 
 class RWACell(tf.contrib.rnn.RNNCell):
-	"""Recurrent Weighted Averge Cell (https://arxiv.org/abs/1703.01253)"""
+	"""Recurrent weighted averge cell (https://arxiv.org/abs/1703.01253)"""
 
 	def __init__(self, num_units, decay=None):
 		self.num_units = num_units
