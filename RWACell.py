@@ -9,8 +9,8 @@
 
 This module provides an implementation of a recurrent weighted average (RWA)
 model (https://arxiv.org/abs/1703.01253). The RWACell extends the `RNNCell`
-class to create a model that conforms with recurrent neural network framework
-in TensorFlow.
+class to create a model that conforms with the recurrent neural network
+framework in TensorFlow.
 """
 
 import tensorflow as tf
