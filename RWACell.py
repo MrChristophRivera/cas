@@ -20,6 +20,15 @@ class RWACell(tf.contrib.rnn.RNNCell):
 	"""Recurrent weighted averge cell (https://arxiv.org/abs/1703.01253)"""
 
 	def __init__(self, num_units, decay=None):
+		"""Initialize the RWA cell.
+		Args:
+			num_units: int, The number of units in the RWA cell.
+			decay: (optional) if this is `None` there will be no
+				decay. If this is a float it sets the decay
+				rate for every unit. If this is a list or
+				tensor of shape `[num_units]` it sets the decay
+				rate for each individual unit.
+		"""
 		self.num_units = num_units
 		self.activation = tf.nn.tanh
 		if decay is None:
