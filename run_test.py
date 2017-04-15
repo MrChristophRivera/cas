@@ -56,9 +56,11 @@ b_end = tf.Variable(tf.zeros([num_classes]))
 
 # Model
 #
-h, _ = tf.nn.dynamic_rnn(cell, x, dtype=tf.float32)
-ly = tf.matmul(h[:,num_steps-1,:], W_end)+b_end
-py = tf.nn.softmax(ly)
+with tf.variable_scope('layer_1'):
+	h, _ = tf.nn.dynamic_rnn(cell, x, dtype=tf.float32)
+with tf.variable_scope('layer_output'):
+	ly = tf.matmul(h[:,num_steps-1,:], W_end)+b_end
+	py = tf.nn.softmax(ly)
 
 # Cost function and optimizer
 #
