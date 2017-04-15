@@ -31,6 +31,7 @@ num_features = 1
 num_steps = 28**2
 num_cells = 250
 num_classes = 10
+decay_rate = np.array([1.0]*62+[0.1]*63+[0.01]*62+[0.0]*63)*np.log(2.0)	# Create different decay rates for each unit
 
 # Training parameters
 #
@@ -47,19 +48,17 @@ learning_rate = 0.001
 x = tf.placeholder(tf.float32, [batch_size, num_steps, num_features])
 y = tf.placeholder(tf.float32, [batch_size, num_classes])
 
-# Variables
-#
-decay = [0.693]*62+[0.0693]*63+[0.00693]*62+[0.0]*63	# Create different decay rates for different units
-cell = RWACell(num_cells, decay_rate=decay)	# Modified code to run RWA model
-W_end = tf.Variable(tf.random_normal([num_cells, num_classes], stddev=np.sqrt(1.0/num_cells)))
-b_end = tf.Variable(tf.zeros([num_classes]))
-
 # Model
 #
-with tf.variable_scope('layer_1'):
+with tf.variable_scope('recurrent_layer_1'):
+	cell = RWACell(num_cells, decay_rate=decay_rate)	# Modified code to run RWA model
 	h, _ = tf.nn.dynamic_rnn(cell, x, dtype=tf.float32)
-with tf.variable_scope('layer_output'):
-	ly = tf.matmul(h[:,num_steps-1,:], W_end)+b_end
+
+with tf.variable_scope('output_layer'):
+	W_o = tf.get_variable('W_o', [num_cells, num_classes], initializer=tf.contrib.layers.xavier_initializer()),
+	b_o = tf.get_variable('b_o', [num_classes], initializer=tf.constant_initializer(0.0)),
+	h_last = h[:,num_steps-1,:]	# Grab values from the hidden state at the last step
+	ly = tf.matmul(h_last, W_o)+b_o
 	py = tf.nn.softmax(ly)
 
 # Cost function and optimizer
@@ -70,7 +69,7 @@ optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
 # Evaluate performance
 #
 correct = tf.equal(tf.argmax(py, 1), tf.argmax(y, 1))
-accuracy = 100.0*tf.reduce_mean(tf.cast(correct, tf.float32))
+accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
 
 # Create operator to initialize session
 #
@@ -102,28 +101,10 @@ with tf.Session() as session:
 		xs_sequence = np.reshape(xs, [batch_size, num_steps, num_features])	# Convert image into a sequence of pixels.
 		feed_train = {x: xs_sequence, y: ys}
 
-		# Periodically monitor progress
-		#
-		if iteration%100 == 0:
-
-			# Grab a batch of validation data
-			#
-			xs, ys = dataset.validation.next_batch(batch_size)
-			xs_sequence = np.reshape(xs, [batch_size, num_steps, num_features])	# Convert image into a sequence of pixels.
-			feed_validation = {x: xs_sequence, y: ys}			
-
-			# Print report to user
-			#
-			print('Iteration:', iteration)
-			print('  Cost (Training):      ', cost.eval(feed_train)/np.log(2.0), 'bits')
-			print('  Accuracy (Training):  ', accuracy.eval(feed_train), '%')
-			print('  Cost (Validation):    ', cost.eval(feed_validation)/np.log(2.0), 'bits')
-			print('  Accuracy (Validation):', accuracy.eval(feed_validation), '%')
-			print('', flush=True)
-
 		# Update parameters
 		#
-		session.run(optimizer, feed_dict=feed_train)
+		cost_value, accuracy_value, _ = session.run((cost, accuracy, optimizer), feed_dict=feed_train)
+		print('Iteration:', iteration, 'Cost:', cost_value/np.log(2.0), 'Accuracy:', 100.0*accuracy_value, '%')
 
 	# Save the trained model
 	#
