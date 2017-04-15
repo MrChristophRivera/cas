@@ -31,7 +31,7 @@ num_features = 1
 num_steps = 28**2
 num_cells = 250
 num_classes = 10
-decay_rate = np.array([1.0]*62+[0.1]*63+[0.01]*62+[0.0]*63)*np.log(2.0)	# Create different decay rates for each unit
+decay_rate = [0.693]*62+[0.693/10]*63+[0.693/100]*62+[0.0]*63	# Create different decay rates for each unit
 
 # Training parameters
 #
