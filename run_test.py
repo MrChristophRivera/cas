@@ -55,8 +55,8 @@ with tf.variable_scope('recurrent_layer_1'):
 	h, _ = tf.nn.dynamic_rnn(cell, x, dtype=tf.float32)
 
 with tf.variable_scope('output_layer'):
-	W_o = tf.get_variable('W_o', [num_cells, num_classes], initializer=tf.contrib.layers.xavier_initializer()),
-	b_o = tf.get_variable('b_o', [num_classes], initializer=tf.constant_initializer(0.0)),
+	W_o = tf.get_variable('W_o', [num_cells, num_classes], initializer=tf.contrib.layers.xavier_initializer())
+	b_o = tf.get_variable('b_o', [num_classes], initializer=tf.constant_initializer(0.0))
 	h_last = h[:,num_steps-1,:]	# Grab values from the hidden state at the last step
 	ly = tf.matmul(h_last, W_o)+b_o
 	py = tf.nn.softmax(ly)
