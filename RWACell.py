@@ -38,11 +38,16 @@ class RWACell(tf.contrib.rnn.RNNCell):
 
 	def zero_state(self, batch_size, dtype):
 		num_units = self.num_units
+		activation = self.activation
 
 		n = tf.zeros([batch_size, num_units], dtype=dtype)
 		d = tf.zeros([batch_size, num_units], dtype=dtype)
 		h = tf.zeros([batch_size, num_units], dtype=dtype)
 		a_max = tf.fill([batch_size, num_units], -1E25)	# Start off with a tiny number with room for this value to decay
+
+		s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
+# NOT WORKING YET
+#		h += activation(tf.expand_dims(s, 0))
 
 		return (n, d, h, a_max)
 
@@ -54,32 +59,12 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		x = inputs
 		n, d, h, a_max = state
 
-		def load_params():
-			return (
-				tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer()),
-				tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0)),
-				tf.get_variable('W_g', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer()),
-				tf.get_variable('b_g', [num_units], initializer=tf.constant_initializer(0.0)),
-				tf.get_variable('W_a', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
-			)
-		"""The initial state of the RWA are parameters that must be
-		fitted to the data. Because the scope is not defined in
-		`zero_state`, the parameters for the initial state must be
-		created here. A check is needed to determine if the initial
-		state has already been created and used. Unfortunately,
-		TensorFlow lacks a function to check if a variable has already
-		been defined in scope. That is why the exception is used here.
-		If the variables do not exist yet, the variables along with the
-		initial state are created after the exception is thrown.
-		"""
-		try:
-			with tf.variable_scope(scope, reuse=True):	# Works only if the variables have already been created
-				W_u, b_u, W_g, b_g, W_a = load_params()
-		except ValueError:
-			with tf.variable_scope(scope):	# Called when variables are not yet created
-				W_u, b_u, W_g, b_g, W_a = load_params()
-				s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
-				h += activation(tf.expand_dims(s, 0))	# Initial hidden state
+		with tf.variable_scope(scope):
+			W_u = tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer()),
+			b_u = tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0)),
+			W_g = tf.get_variable('W_g', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer()),
+			b_g = tf.get_variable('b_g', [num_units], initializer=tf.constant_initializer(0.0)),
+			W_a = tf.get_variable('W_a', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
 
 		xh = tf.concat([x, h], 1)
 
