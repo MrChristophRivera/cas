@@ -46,8 +46,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		a_max = tf.fill([batch_size, num_units], -1E25)	# Start off with a tiny number with room for this value to decay
 
 		s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
-# NOT WORKING YET
-#		h += activation(tf.expand_dims(s, 0))
+		h += activation(tf.expand_dims(s, 0))
 
 		return (n, d, h, a_max)
 
