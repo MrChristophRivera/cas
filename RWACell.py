@@ -59,10 +59,10 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		n, d, h, a_max = state
 
 		with tf.variable_scope(scope):
-			W_u = tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer()),
-			b_u = tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0)),
-			W_g = tf.get_variable('W_g', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer()),
-			b_g = tf.get_variable('b_g', [num_units], initializer=tf.constant_initializer(0.0)),
+			W_u = tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer())
+			b_u = tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0))
+			W_g = tf.get_variable('W_g', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
+			b_g = tf.get_variable('b_g', [num_units], initializer=tf.constant_initializer(0.0))
 			W_a = tf.get_variable('W_a', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
 
 		xh = tf.concat([x, h], 1)
