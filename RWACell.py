@@ -75,8 +75,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		n, d, h, a_max = state
 		if scope is not None:
 			raise ValueError(
-				"The argument `scope` for `RWACell.__call__` is deprecated and"
-				"no longer works. The scope is hard-coded to make the initial"
+				"The argument `scope` for `RWACell.__call__` is deprecated and "
+				"no longer works. The scope is hard-coded to make the initial "
 				"state learnable. See `RWACell.zero_state` for more details."
 			)
 
@@ -85,10 +85,10 @@ class RWACell(tf.contrib.rnn.RNNCell):
 				s_0 = tf.get_variable('s_0', [num_units])
 		except ValueError:
 			raise ValueError(
-					"The initial state of the model contains parameters"
-					"that must be learned and these parameters are not"
-					"in scope. Please make sure that `RWACell.zero_state`"
-					"is under the same scope as the other parameters of"
+					"The initial state of the model contains parameters "
+					"that must be learned and these parameters are not "
+					"in scope. Please make sure that `RWACell.zero_state` "
+					"is under the same scope as the other parameters of "
 					"the model."
 				)
 
