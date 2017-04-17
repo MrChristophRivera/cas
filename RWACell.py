@@ -54,11 +54,11 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		h = tf.zeros([batch_size, num_units], dtype=dtype)
 		a_max = -float('inf')*tf.ones([batch_size, num_units], dtype=dtype)	# Start off with a large negative number with room for this value to decay
 
-		"""The scope for the RWACell is hard-coded in `RWACell.zero_state`. The
-		reason why this is done is because the initial state is learned and some
-		of the model parameters must be defined here. Because these parameters
-		required a scope and because `RWACell.zero_state` does not accept the
-		scope as an argument, the only option is to hard-code it here.
+		"""The scope for the RWACell is hard-coded in `RWACell.zero_state`. This
+		is done because the initial state is learned and some of the model
+		parameters must be defined here. These parameters require a scope and
+		becaus `RWACell.zero_state` does not accept the scope as an argument, it
+		must be hard-coded.
 		"""
 		with tf.variable_scope('RWACell'):
 			s_0 = tf.get_variable('s_0', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
@@ -76,8 +76,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		if scope is not None:
 			raise ValueError(
 				"The argument `scope` for `RWACell.__call__` is deprecated and"
-				"no longer works. The scope is hard-coded. Please see the"
-				"function `RWACell.zero_state` for the definition of the scope."
+				"no longer works. The scope is hard-coded to make the initial"
+				"state learnable. See `RWACell.zero_state` for more details."
 			)
 
 		try:
