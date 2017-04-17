@@ -41,16 +41,6 @@ class RWACell(tf.contrib.rnn.RNNCell):
 			decay_rate = tf.constant(decay_rate)
 		self.decay_rate = decay_rate
 
-	def zero_state(self, batch_size, dtype):
-		num_units = self.num_units
-
-		n = tf.zeros([batch_size, num_units], dtype=dtype)
-		d = tf.zeros([batch_size, num_units], dtype=dtype)
-		h = tf.zeros([batch_size, num_units], dtype=dtype)
-		a_max = tf.fill([batch_size, num_units], -1E25)	# Start off with a tiny number with room for this value to decay
-
-		return (n, d, h, a_max)
-
 	def __call__(self, inputs, state, scope='RWACell'):
 		num_inputs = inputs.get_shape()[1]
 		num_units = self.num_units
