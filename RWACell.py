@@ -49,7 +49,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		The scope for the RWACell is hard-coded in `zero_state`. The reason why
 		this is done is because some of the model parameters must be defined here.
 		Unfortunately, the RWACell does not accept the scope as an argument, which
-		is why the `scope` has been hard coded to `RWACell`.
+		is why the scope had to be hard-coded. The scope is defined as 'RWACell'.
 		"""
 		with tf.variable_scope('RWACell'):
 			s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
