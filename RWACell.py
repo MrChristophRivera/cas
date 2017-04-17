@@ -45,32 +45,32 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		h = tf.zeros([batch_size, num_units], dtype=dtype)
 		a_max = tf.fill([batch_size, num_units], -1E25)	# Start off with a tiny number with room for this value to decay
 
-		"""
-		The scope for the RWACell is hard-coded in `zero_state`. The reason why
-		this is done is because some of the model parameters must be defined here.
-		Unfortunately, the RWACell does not accept the scope as an argument, which
-		is why the scope had to be hard-coded. The scope is defined as 'RWACell'.
-
-		An alternative solution would be to pass the scope as an argument through
-		either `__init__` or `zero_state`. The same scope must then be used
-		every time the object is called. To ensure the scope does not change, the
-		scope in `zero_state` and `__call__` would need to be compared to make
-		sure it is the same scope.
-		"""
-		with tf.variable_scope('RWACell'):
-			s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
-			h += activation(tf.expand_dims(s, 0))
+#		"""
+#		The scope for the RWACell is hard-coded in `zero_state`. The reason why
+#		this is done is because some of the model parameters must be defined here.
+#		Unfortunately, the RWACell does not accept the scope as an argument, which
+#		is why the scope had to be hard-coded. The scope is defined as 'RWACell'.
+#
+#		An alternative solution would be to pass the scope as an argument through
+#		either `__init__` or `zero_state`. The same scope must then be used
+#		every time the object is called. To ensure the scope does not change, the
+#		scope in `zero_state` and `__call__` would need to be compared to make
+#		sure it is the same scope.
+#		"""
+#		with tf.variable_scope('RWACell'):
+#			s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
+#			h += activation(tf.expand_dims(s, 0))
 
 		return (n, d, h, a_max)
 
-	def __call__(self, inputs, state, scope=None):
-		if scope is not None:
-			raise ValueError(
-				"The scope for the RWACell is hard-coded and cannot be overwritten."
-				"Please see the member function `zero_state` for the definition of
-				"the scope. The scope is defined there to accommodate the"
-				"parameterization of the intial state of the model."
-			)
+	def __call__(self, inputs, state, scope='RWACell'):
+#		if scope is not None:
+#			raise ValueError(
+#				"The scope for the RWACell is hard-coded and cannot be overwritten."
+#				"Please see the member function `zero_state` for the definition of
+#				"the scope. The scope is defined there to accommodate the"
+#				"parameterization of the intial state of the model."
+#			)
 
 		num_inputs = inputs.get_shape()[1]
 		num_units = self.num_units
@@ -79,7 +79,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		x = inputs
 		n, d, h, a_max = state
 
-		with tf.variable_scope('RWACell'):
+#		with tf.variable_scope('RWACell'):
+		with tf.variable_scope(scope):
 			W_u = tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer())
 			b_u = tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0))
 			W_g = tf.get_variable('W_g', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
