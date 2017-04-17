@@ -54,8 +54,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		An alternative solution would be to pass the scope as an argument through
 		either `__init__` or `zero_state`. The same scope must then be used
 		every time the object is called. To ensure the scope does not change, the
-		scope here and in `__call__` would need to be compared to make sure it is
-		the same scope.
+		scope in `zero_state` and `__call__` would need to be compared to make
+		sure it is the same scope.
 		"""
 		with tf.variable_scope('RWACell'):
 			s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
