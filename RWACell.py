@@ -52,7 +52,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		n = tf.zeros([batch_size, num_units], dtype=dtype)
 		d = tf.zeros([batch_size, num_units], dtype=dtype)
 		h = tf.zeros([batch_size, num_units], dtype=dtype)
-		a_max = -1E25*tf.ones([batch_size, num_units], dtype=dtype)	# Start off with a large negative number with room for this value to decay
+		a_max = -float('inf')*tf.ones([batch_size, num_units], dtype=dtype)	# Start off with a large negative number with room for this value to decay
 
 		"""The scope for the RWACell is hard-coded in `RWACell.zero_state`. The
 		reason why this is done is because the initial state is learned and some
