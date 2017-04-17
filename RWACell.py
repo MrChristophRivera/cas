@@ -50,6 +50,12 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		this is done is because some of the model parameters must be defined here.
 		Unfortunately, the RWACell does not accept the scope as an argument, which
 		is why the scope had to be hard-coded. The scope is defined as 'RWACell'.
+
+		An alternative solution would be to pass the scope as an argument through
+		either `__init__` or `zero_state`. The same scope must then be used
+		every time the object is called. To ensure the scope does not change, the
+		scope here and in `__call__` would need to be compared to make sure it is
+		the same scope.
 		"""
 		with tf.variable_scope('RWACell'):
 			s = tf.get_variable('s', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
@@ -62,7 +68,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 			raise ValueError(
 				"The scope for the RWACell is hard-coded and cannot be overwritten."
 				"Please see the member function `zero_state` for the definition of
-				"the scope."
+				"the scope. The scope is defined there to accommodate the"
+				"parameterization of the intial state of the model."
 			)
 
 		num_inputs = inputs.get_shape()[1]
