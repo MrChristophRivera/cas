@@ -43,7 +43,6 @@ class RWACell(tf.contrib.rnn.RNNCell):
 
 	def zero_state(self, batch_size, dtype):
 		num_units = self.num_units
-		activation = self.activation
 
 		n = tf.zeros([batch_size, num_units], dtype=dtype)
 		d = tf.zeros([batch_size, num_units], dtype=dtype)
