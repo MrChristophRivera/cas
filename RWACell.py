@@ -35,31 +35,64 @@ class RWACell(tf.contrib.rnn.RNNCell):
 				defined as `ln(2.0)/hl` where `hl` is the desired
 				half-life of the memory.
 		"""
+
 		self.num_units = num_units
-		self.activation = tf.nn.tanh
 		if type(decay_rate) is not tf.Variable:
-			decay_rate = tf.constant(decay_rate)
+			decay_rate = tf.convert_to_tensor(decay_rate)
 		self.decay_rate = decay_rate
+		self.activation = tf.nn.tanh
 
 	def zero_state(self, batch_size, dtype):
+		"""`zero_state` is overridden to return non-zero values and
+		parameters that must be learned."""
+
 		num_units = self.num_units
+		activation = self.activation
 
 		n = tf.zeros([batch_size, num_units], dtype=dtype)
 		d = tf.zeros([batch_size, num_units], dtype=dtype)
 		h = tf.zeros([batch_size, num_units], dtype=dtype)
-		a_max = tf.fill([batch_size, num_units], -1E25)	# Start off with a large negative number with room for this value to decay
+		a_max = -1E25*tf.ones([batch_size, num_units], dtype=dtype)	# Start off with a large negative number with room for this value to decay
+
+		"""The scope for the RWACell is hard-coded in `RWACell.zero_state`. The
+		reason why this is done is because the initial state is learned and some
+		of the model parameters must be defined here. Because these parameters
+		required a scope and because `RWACell.zero_state` does not accept the
+		scope as an argument, the only option is to hard-code it here.
+		"""
+		with tf.variable_scope('RWACell'):
+			s_0 = tf.get_variable('s_0', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
+			h += activation(tf.expand_dims(s_0, 0))
 
 		return (n, d, h, a_max)
 
-	def __call__(self, inputs, state, scope='RWACell'):
+	def __call__(self, inputs, state, scope=None):
 		num_inputs = inputs.get_shape()[1]
 		num_units = self.num_units
-		activation = self.activation
 		decay_rate = self.decay_rate
+		activation = self.activation
 		x = inputs
 		n, d, h, a_max = state
+		if scope is not None:
+			raise ValueError(
+				"The argument `scope` for `RWACell.__call__` is deprecated and"
+				"no longer works. The scope is hard-coded. Please see the"
+				"function `RWACell.zero_state` for the definition of the scope."
+			)
 
-		with tf.variable_scope(scope):
+		try:
+			with tf.variable_scope('RWACell', reuse=True):
+				s_0 = tf.get_variable('s_0', [num_units])
+		except ValueError:
+			raise ValueError(
+					"The initial state of the model contains parameters"
+					"that must be learned and these parameters are not"
+					"in scope. Please make sure that `RWACell.zero_state`"
+					"is under the same scope as the other parameters of"
+					"the model."
+				)
+
+		with tf.variable_scope('RWACell'):
 			W_u = tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer())
 			b_u = tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0))
 			W_g = tf.get_variable('W_g', [num_inputs+num_units, num_units], initializer=tf.contrib.layers.xavier_initializer())
