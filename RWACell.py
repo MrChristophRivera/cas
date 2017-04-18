@@ -32,7 +32,7 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		"""
 
 		self.num_units = num_units
-		if type(decay_rate) is not tf.Variable:
+		if type(decay_rate) is not tf.Variable:	# Do nothing if the decay rate is learnable
 			decay_rate = tf.convert_to_tensor(decay_rate)
 		self.decay_rate = decay_rate
 		self.activation = tf.nn.tanh
