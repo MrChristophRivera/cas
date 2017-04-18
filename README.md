@@ -6,3 +6,5 @@ In this repository, the RWA model is reimplemented as a TensorFlow RNNCell. The 
 
 Each unit can be given a different decay value. Some units can have very short attention spans while other units can have indefinite attention spans. It is my hope that this model will exhibit superior performance on a range of problems in fields like NLP and bioinformatics.
 
+If you like the idea I am open to collaboration! This project is still in its infancy.
+
