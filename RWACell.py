@@ -52,8 +52,8 @@ class RWACell(tf.contrib.rnn.RNNCell):
 		"""The scope for the RWACell is hard-coded into `RWACell.zero_state`.
 		This is done because the initial state is learned and some of the model
 		parameters must be defined here. These parameters require a scope and
-		becaus `RWACell.zero_state` does not accept the scope as an argument, it
-		must be hard-coded.
+		because `RWACell.zero_state` does not accept the scope as an argument,
+		it must be hard-coded.
 		"""
 		with tf.variable_scope('RWACell'):
 			s_0 = tf.get_variable('s_0', [num_units], initializer=tf.random_normal_initializer(stddev=1.0))
