@@ -75,17 +75,17 @@ class RWACell(tf.contrib.rnn.RNNCell):
 				"state learnable. See `RWACell.zero_state` for more details."
 			)
 
-		try:
-			with tf.variable_scope('RWACell', reuse=True):
-				s_0 = tf.get_variable('s_0', [num_units])
-		except ValueError:
-			raise ValueError(
-					"The initial state of the model contains parameters "
-					"that must be learned and these parameters are not "
-					"in scope. Please make sure that `RWACell.zero_state` "
-					"is under the same scope as the other parameters of "
-					"the model."
-				)
+#		try:
+#			with tf.variable_scope('RWACell', reuse=True):
+#				s_0 = tf.get_variable('s_0', [num_units])
+#		except ValueError:
+#			raise ValueError(
+#					"The initial state of the model contains parameters "
+#					"that must be learned and these parameters are not "
+#					"in scope. Please make sure that `RWACell.zero_state` "
+#					"is under the same scope as the other parameters of "
+#					"the model."
+#				)
 		with tf.variable_scope('RWACell'):
 			W_u = tf.get_variable('W_u', [num_inputs, num_units], initializer=tf.contrib.layers.xavier_initializer())
 			b_u = tf.get_variable('b_u', [num_units], initializer=tf.constant_initializer(0.0))
